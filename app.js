@@ -23,7 +23,12 @@ function textoFecha(iso) {
   return fecha.format(valor);
 }
 
+const INICIO = new Date("2026-11-23T00:00:00-05:00");
+const FIN = new Date("2026-12-16T00:00:00-05:00");
+
 function proximaBusqueda(desde) {
+  if (desde < INICIO) return INICIO;
+  if (desde >= FIN) return null;
   const siguienteMomento = new Date(desde.getTime());
   siguienteMomento.setUTCSeconds(0, 0);
   const minutos = siguienteMomento.getUTCMinutes();
@@ -35,7 +40,10 @@ function proximaBusqueda(desde) {
 function pintarHorario(iso) {
   if (iso) ultima.dataset.iso = iso;
   ultima.textContent = textoFecha(iso || ultima.dataset.iso);
-  siguiente.textContent = textoFecha(proximaBusqueda(new Date()).toISOString());
+  const proxima = proximaBusqueda(new Date());
+  siguiente.textContent = proxima
+    ? textoFecha(proxima.toISOString())
+    : "La temporada de búsqueda ya terminó";
 }
 
 function pintar(estado) {

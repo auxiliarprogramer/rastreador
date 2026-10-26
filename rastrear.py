@@ -10,7 +10,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 TIENDA = "https://www.maquillajetrendyshop.com"
@@ -25,6 +25,14 @@ USER_AGENT = "RastreadorCalendario/1.0 (+https://github.com/)"
 
 def ahora_iso():
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def en_temporada(momento=None):
+    colombia = timezone(timedelta(hours=-5))
+    local = (momento or datetime.now(timezone.utc)).astimezone(colombia)
+    inicio = datetime(local.year, 11, 23, tzinfo=colombia)
+    fin = datetime(local.year, 12, 16, tzinfo=colombia)
+    return inicio <= local < fin
 
 
 def cargar_estado():
@@ -150,6 +158,10 @@ def chats_telegram():
 
 
 def main():
+    if (os.environ.get("MODO") or "") == "schedule" and not en_temporada():
+        print("Fuera de temporada. La búsqueda automática empieza el 23 de noviembre.")
+        return 0
+
     token = (os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
     chats = chats_telegram()
     anterior = cargar_estado()

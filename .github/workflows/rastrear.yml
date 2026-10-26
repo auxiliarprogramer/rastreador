@@ -2,8 +2,12 @@ name: Rastrear Calendario
 
 on:
   schedule:
-    # Cada 15 minutos. GitHub a veces retrasa las tareas programadas.
-    - cron: "*/15 * * * *"
+    # Desde el 23 de noviembre, 00:00 hora de Colombia, hasta el 15 de diciembre.
+    # GitHub a veces retrasa las tareas programadas.
+    - cron: "*/15 5-23 23 11 *"
+    - cron: "*/15 * 24-30 11 *"
+    - cron: "*/15 * 1-15 12 *"
+    - cron: "*/15 0-4 16 12 *"
   workflow_dispatch:
     inputs:
       prueba:
@@ -28,6 +32,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MODO: ${{ github.event_name }}
           PRUEBA: ${{ github.event_name == 'workflow_dispatch' && inputs.prueba }}
         run: python rastrear.py
 
