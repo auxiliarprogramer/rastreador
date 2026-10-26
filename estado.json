@@ -1,0 +1,13 @@
+{
+  "consulta": "Calendario",
+  "tienda": "https://www.maquillajetrendyshop.com",
+  "ultimaRevision": "2026-10-26T14:29:32+00:00",
+  "productos": [],
+  "alertasEnviadas": [],
+  "whatsapp": {
+    "destino": "+573146876883",
+    "configurado": false,
+    "ultimoEnvio": null,
+    "ultimoResultado": "Sin novedades"
+  }
+}
