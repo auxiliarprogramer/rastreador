@@ -52,13 +52,40 @@ h1 {
   line-height: 1.5;
 }
 
-.aviso {
-  margin-top: 22px;
-  padding: 14px 16px;
-  border-radius: 14px;
-  background: var(--rosa-claro);
-  color: var(--rosa);
+.horario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.horario div {
+  padding: 16px 18px;
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  border-radius: 18px;
+  box-shadow: var(--sombra);
+}
+
+.etiqueta {
+  margin: 0;
   font-family: "Segoe UI", sans-serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rosa);
+}
+
+.momento {
+  margin: 8px 0 0;
+  font-size: 1.35rem;
+}
+
+.nota {
+  margin: 12px 0 0;
+  color: var(--suave);
+  font-family: "Segoe UI", sans-serif;
+  font-size: 0.92rem;
   line-height: 1.45;
 }
 
@@ -150,30 +177,8 @@ h1 {
 
 .boton:hover { background: #7d303b; }
 
-.pasos {
-  margin-top: 36px;
-  color: var(--suave);
-  font-family: "Segoe UI", sans-serif;
-}
-
-.pasos h2 {
-  margin: 0 0 10px;
-  color: var(--tinta);
-  font-family: Georgia, serif;
-  font-size: 1.35rem;
-  font-weight: 500;
-}
-
-.pasos ol { margin: 0; padding-left: 1.2rem; }
-.pasos li { margin: 8px 0; line-height: 1.45; }
-.pasos code {
-  font-family: Consolas, monospace;
-  font-size: 0.86rem;
-  color: var(--tinta);
-}
-.nota { margin: 14px 0 0; line-height: 1.45; }
-
 @media (max-width: 640px) {
+  .horario { grid-template-columns: 1fr; }
   .tarjeta { grid-template-columns: 1fr; }
   .tarjeta img, .sin-foto { width: 100%; height: 180px; }
 }

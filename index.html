@@ -14,25 +14,23 @@
       <p class="resumen" id="resumen">Buscando el estado guardado…</p>
     </header>
 
+    <section class="horario" aria-live="polite">
+      <div>
+        <p class="etiqueta">Última búsqueda</p>
+        <p class="momento" id="ultima">…</p>
+      </div>
+      <div>
+        <p class="etiqueta">Siguiente búsqueda</p>
+        <p class="momento" id="siguiente">…</p>
+      </div>
+    </section>
+    <p class="nota">La siguiente hora es la programada. GitHub puede demorarla unos minutos.</p>
+
     <p class="acciones">
       <a class="boton" href="https://github.com/auxiliarprogramer/rastreador/actions/workflows/rastrear.yml">Probar aviso</a>
     </p>
 
-    <section class="aviso" id="aviso" hidden></section>
-
     <section id="lista" class="lista" aria-live="polite"></section>
-
-    <section class="pasos">
-      <h2>Para que el aviso llegue a las dos personas</h2>
-      <ol>
-        <li>Cada una abre <a href="https://t.me/RastTrendyBot">t.me/RastTrendyBot</a>, pulsa Iniciar y escribe hola.</li>
-        <li>En el repositorio de GitHub, entra a Settings, Secrets and variables, Actions, y crea <code>TELEGRAM_BOT_TOKEN</code> con el token de BotFather.</li>
-        <li>Crea <code>TELEGRAM_CHAT_ID</code> con los dos identificadores separados por una coma.</li>
-        <li>En Settings, Pages, publica la rama principal desde la carpeta raíz.</li>
-        <li>Pulsa «Probar aviso», deja marcada «Enviar mensaje de prueba» y confirma con Run workflow.</li>
-      </ol>
-      <p class="nota">La página se actualiza con el archivo que guarda la tarea, más o menos cada 15 minutos. El mensaje sale una sola vez por producto cuando pasa a tener stock. Si se agota y vuelve, avisa otra vez.</p>
-    </section>
   </main>
   <script src="app.js"></script>
 </body>

@@ -1,6 +1,7 @@
 const lista = document.querySelector("#lista");
 const resumen = document.querySelector("#resumen");
-const aviso = document.querySelector("#aviso");
+const ultima = document.querySelector("#ultima");
+const siguiente = document.querySelector("#siguiente");
 
 const moneda = new Intl.NumberFormat("es-CO", {
   style: "currency",
@@ -16,28 +17,35 @@ const fecha = new Intl.DateTimeFormat("es-CO", {
 });
 
 function textoFecha(iso) {
-  if (!iso) return "todavía no hay una revisión";
+  if (!iso) return "Todavía no hay una búsqueda";
   const valor = new Date(iso);
-  if (Number.isNaN(valor.getTime())) return "todavía no hay una revisión";
+  if (Number.isNaN(valor.getTime())) return "Todavía no hay una búsqueda";
   return fecha.format(valor);
+}
+
+function proximaBusqueda(desde) {
+  const siguienteMomento = new Date(desde.getTime());
+  siguienteMomento.setUTCSeconds(0, 0);
+  const minutos = siguienteMomento.getUTCMinutes();
+  const resto = minutos % 15;
+  siguienteMomento.setUTCMinutes(minutos + (resto === 0 ? 15 : 15 - resto));
+  return siguienteMomento;
+}
+
+function pintarHorario(iso) {
+  if (iso) ultima.dataset.iso = iso;
+  ultima.textContent = textoFecha(iso || ultima.dataset.iso);
+  siguiente.textContent = textoFecha(proximaBusqueda(new Date()).toISOString());
 }
 
 function pintar(estado) {
   const productos = Array.isArray(estado.productos) ? estado.productos : [];
   const disponibles = productos.filter((producto) => producto.disponible).length;
-  const telegram = estado.telegram || {};
 
-  const revision = `Última revisión: ${textoFecha(estado.ultimaRevision)}`;
   resumen.textContent = productos.length
-    ? `${disponibles} de ${productos.length} con stock. ${revision}`
-    : `Ningún producto publicado contiene «Calendario» en el nombre. ${revision}`;
-
-  if (telegram.configurado) {
-    aviso.hidden = true;
-  } else {
-    aviso.hidden = false;
-    aviso.textContent = "El aviso por Telegram todavía no está activado. Las dos personas deben abrir @RastTrendyBot y pulsar Iniciar. Luego se guardan el token y los chats en los secretos del repositorio.";
-  }
+    ? `${disponibles} de ${productos.length} con stock.`
+    : "Ningún producto publicado contiene «Calendario» en el nombre.";
+  pintarHorario(estado.ultimaRevision);
 
   if (!productos.length) {
     lista.innerHTML = '<p class="vacio">Cuando la tienda publique un producto cuyo nombre contenga «Calendario», va a aparecer aquí. Si tiene stock, el aviso sale por Telegram.</p>';
@@ -111,3 +119,4 @@ async function cargar() {
 
 cargar();
 setInterval(cargar, 60000);
+setInterval(() => pintarHorario(ultima.dataset.iso || null), 30000);
