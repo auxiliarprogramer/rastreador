@@ -136,6 +136,20 @@ h1 {
   color: var(--rosa);
 }
 
+.acciones { margin: 22px 0 0; }
+
+.boton {
+  display: inline-block;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--rosa);
+  color: #fffdf9;
+  font-family: "Segoe UI", sans-serif;
+  text-decoration: none;
+}
+
+.boton:hover { background: #7d303b; }
+
 .pasos {
   margin-top: 36px;
   color: var(--suave);

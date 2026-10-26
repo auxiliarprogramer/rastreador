@@ -175,7 +175,29 @@ def main():
     pendientes = [producto for producto in productos if producto["id"] in disponibles - avisos_previos]
 
     ultimo_envio = aviso_previo.get("ultimoEnvio")
-    if not pendientes:
+    prueba = (os.environ.get("PRUEBA") or "").strip().lower() == "true"
+    if prueba:
+        if not token or not chats:
+            resultado = "La prueba no se envió. Faltan TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID."
+            enviados = avisos_previos & disponibles
+        else:
+            texto = (
+                "Prueba del rastreador Trendy.\n\n"
+                "Si te llegó este mensaje, este chat ya recibe el aviso cuando haya un Calendario con stock."
+            )
+            fallos = []
+            for chat in chats:
+                ok, detalle = enviar_telegram(texto, token, chat)
+                if not ok:
+                    fallos.append(detalle)
+            if not fallos:
+                resultado = f"Prueba enviada a {len(chats)} chat(s) de {BOT}"
+                ultimo_envio = ahora_iso()
+            else:
+                resultado = "La prueba no llegó a todos. " + " | ".join(fallos)
+            enviados = avisos_previos & disponibles
+            print(resultado)
+    elif not pendientes:
         resultado = "Sin novedades"
         enviados = avisos_previos & disponibles
     elif not token or not chats:

@@ -14,6 +14,10 @@
       <p class="resumen" id="resumen">Buscando el estado guardado…</p>
     </header>
 
+    <p class="acciones">
+      <a class="boton" href="https://github.com/auxiliarprogramer/rastreador/actions/workflows/rastrear.yml">Probar aviso</a>
+    </p>
+
     <section class="aviso" id="aviso" hidden></section>
 
     <section id="lista" class="lista" aria-live="polite"></section>
@@ -25,7 +29,7 @@
         <li>En el repositorio de GitHub, entra a Settings, Secrets and variables, Actions, y crea <code>TELEGRAM_BOT_TOKEN</code> con el token de BotFather.</li>
         <li>Crea <code>TELEGRAM_CHAT_ID</code> con los dos identificadores separados por una coma.</li>
         <li>En Settings, Pages, publica la rama principal desde la carpeta raíz.</li>
-        <li>En Actions, abre «Rastrear Calendario» y ejecútala una vez para probar.</li>
+        <li>Pulsa «Probar aviso», deja marcada «Enviar mensaje de prueba» y confirma con Run workflow.</li>
       </ol>
       <p class="nota">La página se actualiza con el archivo que guarda la tarea, más o menos cada 15 minutos. El mensaje sale una sola vez por producto cuando pasa a tener stock. Si se agota y vuelve, avisa otra vez.</p>
     </section>

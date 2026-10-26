@@ -5,6 +5,11 @@ on:
     # Cada 15 minutos. GitHub a veces retrasa las tareas programadas.
     - cron: "*/15 * * * *"
   workflow_dispatch:
+    inputs:
+      prueba:
+        description: Enviar mensaje de prueba
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -23,6 +28,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PRUEBA: ${{ github.event_name == 'workflow_dispatch' && inputs.prueba }}
         run: python rastrear.py
 
       - name: Publicar estado en la página
