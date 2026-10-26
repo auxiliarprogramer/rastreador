@@ -23,7 +23,7 @@ function textoFecha(iso) {
   return fecha.format(valor);
 }
 
-const INICIO = new Date("2026-11-23T00:00:00-05:00");
+const INICIO = new Date("2026-11-15T00:00:00-05:00");
 const FIN = new Date("2026-12-16T00:00:00-05:00");
 
 function proximaBusqueda(desde) {
