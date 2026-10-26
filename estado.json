@@ -1,13 +1,13 @@
 {
   "consulta": "Calendario",
   "tienda": "https://www.maquillajetrendyshop.com",
-  "ultimaRevision": "2026-10-26T14:29:32+00:00",
+  "ultimaRevision": "2026-10-26T15:04:49+00:00",
   "productos": [],
   "alertasEnviadas": [],
   "telegram": {
     "destino": "@RastTrendyBot",
-    "configurado": false,
-    "ultimoEnvio": null,
-    "ultimoResultado": "Falta iniciar el bot y guardar los secretos."
+    "configurado": true,
+    "ultimoEnvio": "2026-10-26T15:04:49+00:00",
+    "ultimoResultado": "Prueba enviada a 2 chat(s) de @RastTrendyBot"
   }
 }
