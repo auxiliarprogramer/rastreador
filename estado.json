@@ -4,10 +4,10 @@
   "ultimaRevision": "2026-10-26T14:29:32+00:00",
   "productos": [],
   "alertasEnviadas": [],
-  "whatsapp": {
-    "destino": "+573146876883",
+  "telegram": {
+    "destino": "@RastTrendyBot",
     "configurado": false,
     "ultimoEnvio": null,
-    "ultimoResultado": "Sin novedades"
+    "ultimoResultado": "Falta iniciar el bot y guardar los secretos."
   }
 }

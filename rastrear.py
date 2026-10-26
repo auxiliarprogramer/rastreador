@@ -1,8 +1,7 @@
-"""Consulta el catálogo de Trendy y avisa por WhatsApp si hay un Calendario disponible.
+"""Consulta el catálogo de Trendy y avisa por Telegram si hay un Calendario disponible.
 
-La clave se lee de la variable de entorno WHATSAPP_APIKEY (secreto de GitHub).
-El número de destino es el que pidió el aviso. CallMeBot solo entrega el mensaje
-al mismo WhatsApp que activó la clave.
+El token y el chat se leen de TELEGRAM_BOT_TOKEN y TELEGRAM_CHAT_ID.
+No se guardan en el repositorio.
 """
 
 import json
@@ -17,7 +16,7 @@ from pathlib import Path
 TIENDA = "https://www.maquillajetrendyshop.com"
 BUSQUEDA = TIENDA + "/api/catalog_system/pub/products/search"
 CONSULTA = "Calendario"
-DESTINO = (os.environ.get("WHATSAPP_PHONE") or "+573146876883").strip()
+BOT = "@RastTrendyBot"
 ESTADO_PATH = Path(__file__).with_name("estado.json")
 PAGINA = 50
 MAXIMO = 200
@@ -111,8 +110,8 @@ def formato_precio(precio):
     return "$" + f"{int(round(precio)):,}".replace(",", ".")
 
 
-def mensaje_whatsapp(productos):
-    lineas = ["*Ya hay Calendario en Trendy*", ""]
+def mensaje_telegram(productos):
+    lineas = ["Ya hay Calendario en Trendy", ""]
     for producto in productos:
         lineas.append(producto["nombre"])
         lineas.append(
@@ -124,34 +123,33 @@ def mensaje_whatsapp(productos):
     return "\n".join(lineas).strip()
 
 
-def enviar_whatsapp(texto, apikey):
-    consulta = urllib.parse.urlencode(
-        {"phone": DESTINO, "text": texto, "apikey": apikey}
-    )
+def enviar_telegram(texto, token, chat_id):
+    cuerpo = json.dumps({"chat_id": chat_id, "text": texto}).encode("utf-8")
     solicitud = urllib.request.Request(
-        "https://api.callmebot.com/whatsapp.php?" + consulta,
-        headers={"User-Agent": USER_AGENT},
+        f"https://api.telegram.org/bot{token}/sendMessage",
+        data=cuerpo,
+        headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
     )
     try:
         with urllib.request.urlopen(solicitud, timeout=30) as respuesta:
-            cuerpo = respuesta.read().decode("utf-8", errors="replace")
+            data = json.loads(respuesta.read().decode("utf-8"))
             codigo = respuesta.status
     except urllib.error.HTTPError as error:
-        cuerpo = error.read().decode("utf-8", errors="replace")
-        codigo = error.code
+        detalle = error.read().decode("utf-8", errors="replace")
+        return False, f"HTTP {error.code}: {' '.join(detalle.split())[:240]}"
 
-    plano = " ".join(cuerpo.split())
-    exito = codigo == 200 and any(
-        frase in plano.lower() for frase in ("queued", "sent", "success", "enviad")
-    )
-    return exito, f"HTTP {codigo}: {plano[:240]}"
+    if codigo == 200 and data.get("ok"):
+        return True, "Mensaje entregado a Telegram"
+    descripcion = data.get("description") or "respuesta inesperada"
+    return False, f"HTTP {codigo}: {descripcion}"
 
 
 def main():
-    apikey = (os.environ.get("WHATSAPP_APIKEY") or "").strip()
+    token = (os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
+    chat_id = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
     anterior = cargar_estado()
     avisos_previos = set(anterior.get("alertasEnviadas") or [])
-    whatsapp_previo = anterior.get("whatsapp") or {}
+    aviso_previo = anterior.get("telegram") or anterior.get("whatsapp") or {}
 
     try:
         crudos = buscar_productos()
@@ -171,21 +169,21 @@ def main():
     disponibles = {producto["id"] for producto in productos if producto["disponible"]}
     pendientes = [producto for producto in productos if producto["id"] in disponibles - avisos_previos]
 
-    ultimo_envio = whatsapp_previo.get("ultimoEnvio")
+    ultimo_envio = aviso_previo.get("ultimoEnvio")
     if not pendientes:
         resultado = "Sin novedades"
         enviados = avisos_previos & disponibles
-    elif not apikey:
-        resultado = "Hay stock, pero falta el secreto WHATSAPP_APIKEY. No se envió el WhatsApp."
+    elif not token or not chat_id:
+        resultado = "Hay stock, pero faltan TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID. No se envió el aviso."
         enviados = avisos_previos & disponibles
     else:
-        ok, detalle = enviar_whatsapp(mensaje_whatsapp(pendientes), apikey)
+        ok, detalle = enviar_telegram(mensaje_telegram(pendientes), token, chat_id)
         if ok:
-            resultado = "Aviso enviado a " + DESTINO
+            resultado = "Aviso enviado a " + BOT
             ultimo_envio = ahora_iso()
             enviados = (avisos_previos & disponibles) | {producto["id"] for producto in pendientes}
         else:
-            resultado = "No se pudo enviar el WhatsApp. " + detalle
+            resultado = "No se pudo enviar el Telegram. " + detalle
             enviados = avisos_previos & disponibles
         print(resultado)
 
@@ -195,9 +193,9 @@ def main():
         "ultimaRevision": ahora_iso(),
         "productos": productos,
         "alertasEnviadas": sorted(enviados),
-        "whatsapp": {
-            "destino": DESTINO,
-            "configurado": bool(apikey),
+        "telegram": {
+            "destino": BOT,
+            "configurado": bool(token and chat_id),
             "ultimoEnvio": ultimo_envio,
             "ultimoResultado": resultado,
         },

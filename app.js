@@ -25,22 +25,22 @@ function textoFecha(iso) {
 function pintar(estado) {
   const productos = Array.isArray(estado.productos) ? estado.productos : [];
   const disponibles = productos.filter((producto) => producto.disponible).length;
-  const whatsapp = estado.whatsapp || {};
+  const telegram = estado.telegram || {};
 
   const revision = `Última revisión: ${textoFecha(estado.ultimaRevision)}`;
   resumen.textContent = productos.length
     ? `${disponibles} de ${productos.length} con stock. ${revision}`
     : `Ningún producto publicado contiene «Calendario» en el nombre. ${revision}`;
 
-  if (whatsapp.configurado) {
+  if (telegram.configurado) {
     aviso.hidden = true;
   } else {
     aviso.hidden = false;
-    aviso.textContent = "El WhatsApp a +57 314 687 6883 todavía no está activado. Falta la clave en el repositorio. Los pasos están más abajo.";
+    aviso.textContent = "El aviso por Telegram todavía no está activado. Abre @RastTrendyBot, pulsa Iniciar, y guarda el token y el chat en los secretos del repositorio.";
   }
 
   if (!productos.length) {
-    lista.innerHTML = '<p class="vacio">Cuando la tienda publique un producto cuyo nombre contenga «Calendario», va a aparecer aquí. Si tiene stock, el aviso sale al WhatsApp.</p>';
+    lista.innerHTML = '<p class="vacio">Cuando la tienda publique un producto cuyo nombre contenga «Calendario», va a aparecer aquí. Si tiene stock, el aviso sale por Telegram.</p>';
     return;
   }
 
