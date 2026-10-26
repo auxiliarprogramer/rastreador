@@ -36,7 +36,7 @@ function pintar(estado) {
     aviso.hidden = true;
   } else {
     aviso.hidden = false;
-    aviso.textContent = "El aviso por Telegram todavía no está activado. Abre @RastTrendyBot, pulsa Iniciar, y guarda el token y el chat en los secretos del repositorio.";
+    aviso.textContent = "El aviso por Telegram todavía no está activado. Las dos personas deben abrir @RastTrendyBot y pulsar Iniciar. Luego se guardan el token y los chats en los secretos del repositorio.";
   }
 
   if (!productos.length) {

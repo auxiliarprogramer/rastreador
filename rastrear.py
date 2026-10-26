@@ -144,9 +144,14 @@ def enviar_telegram(texto, token, chat_id):
     return False, f"HTTP {codigo}: {descripcion}"
 
 
+def chats_telegram():
+    crudo = os.environ.get("TELEGRAM_CHAT_ID") or ""
+    return [parte.strip() for parte in crudo.replace(";", ",").split(",") if parte.strip()]
+
+
 def main():
     token = (os.environ.get("TELEGRAM_BOT_TOKEN") or "").strip()
-    chat_id = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
+    chats = chats_telegram()
     anterior = cargar_estado()
     avisos_previos = set(anterior.get("alertasEnviadas") or [])
     aviso_previo = anterior.get("telegram") or anterior.get("whatsapp") or {}
@@ -173,17 +178,22 @@ def main():
     if not pendientes:
         resultado = "Sin novedades"
         enviados = avisos_previos & disponibles
-    elif not token or not chat_id:
+    elif not token or not chats:
         resultado = "Hay stock, pero faltan TELEGRAM_BOT_TOKEN o TELEGRAM_CHAT_ID. No se envió el aviso."
         enviados = avisos_previos & disponibles
     else:
-        ok, detalle = enviar_telegram(mensaje_telegram(pendientes), token, chat_id)
-        if ok:
-            resultado = "Aviso enviado a " + BOT
+        texto = mensaje_telegram(pendientes)
+        fallos = []
+        for chat in chats:
+            ok, detalle = enviar_telegram(texto, token, chat)
+            if not ok:
+                fallos.append(detalle)
+        if not fallos:
+            resultado = f"Aviso enviado a {len(chats)} chat(s) de {BOT}"
             ultimo_envio = ahora_iso()
             enviados = (avisos_previos & disponibles) | {producto["id"] for producto in pendientes}
         else:
-            resultado = "No se pudo enviar el Telegram. " + detalle
+            resultado = "No se pudo enviar a todos. " + " | ".join(fallos)
             enviados = avisos_previos & disponibles
         print(resultado)
 
@@ -195,7 +205,7 @@ def main():
         "alertasEnviadas": sorted(enviados),
         "telegram": {
             "destino": BOT,
-            "configurado": bool(token and chat_id),
+            "configurado": bool(token and chats),
             "ultimoEnvio": ultimo_envio,
             "ultimoResultado": resultado,
         },
