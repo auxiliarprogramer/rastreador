@@ -32,8 +32,8 @@ function proximaBusqueda(desde) {
   const siguienteMomento = new Date(desde.getTime());
   siguienteMomento.setUTCSeconds(0, 0);
   const minutos = siguienteMomento.getUTCMinutes();
-  const resto = minutos % 15;
-  siguienteMomento.setUTCMinutes(minutos + (resto === 0 ? 15 : 15 - resto));
+  const resto = minutos % 5;
+  siguienteMomento.setUTCMinutes(minutos + (resto === 0 ? 5 : 5 - resto));
   return siguienteMomento;
 }
 

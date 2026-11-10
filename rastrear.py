@@ -20,7 +20,10 @@ BOT = "@RastTrendyBot"
 ESTADO_PATH = Path(__file__).with_name("estado.json")
 PAGINA = 50
 MAXIMO = 200
-USER_AGENT = "RastreadorCalendario/1.0 (+https://github.com/)"
+USER_AGENT = (
+    "Mozilla/5.0 (compatible; RastreadorCalendario/1.1; "
+    "+https://github.com/auxiliarprogramer/rastreador)"
+)
 
 
 def ahora_iso():
