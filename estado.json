@@ -1,22 +1,9 @@
 {
   "consulta": "Calendario",
   "tienda": "https://www.maquillajetrendyshop.com",
-  "ultimaRevision": "2026-11-12T18:41:28+00:00",
-  "productos": [
-    {
-      "id": "1047",
-      "nombre": "Calendario de Adviento Wonderland – Edición Luxury",
-      "referencia": "STN-BAU2846",
-      "url": "https://www.maquillajetrendyshop.com/calendario-de-adviento-2026-wonderland-b/p",
-      "disponible": true,
-      "stock": 1,
-      "precio": 200000.0,
-      "imagen": "https://b2ctrendy.vteximg.com.br/arquivos/ids/164487/foto-3.jpg?v=639298401512770000"
-    }
-  ],
-  "alertasEnviadas": [
-    "1047"
-  ],
+  "ultimaRevision": "2026-11-12T23:53:07+00:00",
+  "productos": [],
+  "alertasEnviadas": [],
   "telegram": {
     "destino": "@RastTrendyBot",
     "configurado": true,
